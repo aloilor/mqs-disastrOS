@@ -13,7 +13,7 @@ In this folder
    files: disastrOS_resource.*
 
 2. the descriptor structures and allocation
-   files: disastrOS_resource.*
+   files: disastrOS_descriptor.*
 
 3. the PCB is modified by adding a list of open descriptors
    files: pcb.h, pcb.c

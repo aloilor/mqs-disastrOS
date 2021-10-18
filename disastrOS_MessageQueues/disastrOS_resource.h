@@ -17,6 +17,8 @@ int Resource_free(Resource* resource);
 
 typedef ListHead ResourceList;
 
+void Resource_print(Resource* r);
+
 Resource* ResourceList_byId(ResourceList* l, int id);
 
 void ResourceList_print(ListHead* l);

@@ -3,6 +3,8 @@
 #include <poll.h>
 
 #include "disastrOS.h"
+#include "disastrOS_message_queue.h"
+#include "linked_list.h"
 
 // we need this to handle the sleep state
 void sleeperFunction(void* args){
@@ -24,7 +26,7 @@ void childFunction(void* args){
 
   for (int i=0; i<(disastrOS_getpid()+1); ++i){
     printf("PID: %d, iterate %d\n", disastrOS_getpid(), i);
-    disastrOS_sleep((20-disastrOS_getpid())*5);
+    disastrOS_sleep(6);
   }
   disastrOS_exit(disastrOS_getpid()+1);
 }
@@ -35,10 +37,10 @@ void initFunction(void* args) {
   printf("hello, I am init and I just started\n");
   disastrOS_spawn(sleeperFunction, 0);
   
-
-  printf("I feel like to spawn 10 nice threads\n");
+  /*
+  printf("I feel like to spawn 3 nice threads\n");
   int alive_children=0;
-  for (int i=0; i<10; ++i) {
+  for (int i=0; i<3; ++i) {
     int type=0;
     int mode=DSOS_CREATE;
     printf("mode: %d\n", mode);
@@ -48,6 +50,8 @@ void initFunction(void* args) {
     disastrOS_spawn(childFunction, 0);
     alive_children++;
   }
+  disastrOS_printStatus(); 
+
 
   disastrOS_printStatus();
   int retval;
@@ -57,7 +61,44 @@ void initFunction(void* args) {
     printf("initFunction, child: %d terminated, retval:%d, alive: %d \n",
 	   pid, retval, alive_children);
     --alive_children;
-  }
+  } 
+  disastrOS_printStatus();
+  */
+
+
+  
+  printf("Testing message queues primitives: \n");
+  printf("-------------------------------------------------------------------\n");
+
+  printf("Testing init and alloc: \n");
+  MessageQueue_init();
+  MessageQueue* mq = MessageQueue_alloc(1, 1);
+  MessageQueue_print(mq);
+  printf("-------------------------------------------------------------------\n");
+
+  printf("Trying to write smth in the queue: \n");
+  Message* msg = Message_alloc("Hello");
+  printf("%s \n", msg->msg);
+  List_insert((ListHead*) &mq->messages, (ListItem*)mq->messages.head.first, (ListItem*)msg);
+  MessageQueue_print(mq);
+  printf("-------------------------------------------------------------------\n");
+
+  printf("Trying again to write smth in the queue: \n");
+  msg = Message_alloc("How you doing");
+  List_insert((ListHead*) &mq->messages, (ListItem*)mq->messages.head.first, (ListItem*)msg);
+  MessageQueue_print(mq);
+  printf("-------------------------------------------------------------------\n");
+
+  printf("Trying to remove smth from the queue\n");
+  List_detach((ListHead*) &mq->messages, (ListItem*)mq->messages.head.last);
+  MessageQueue_print(mq);
+  printf("-------------------------------------------------------------------\n");
+
+  printf("Testing free of the message queue\n");
+  MessageQueue_free(mq);  
+  MessageQueue_print(mq);
+  printf("-------------------------------------------------------------------\n");
+  
   printf("shutdown!");
   disastrOS_shutdown();
 }

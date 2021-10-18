@@ -1,4 +1,4 @@
-# MQ in disastrOS
+# Message_Queues_disastrOS
 
 > Message Queues in disastrOS ---> [x1] [C98]  
 > implement an IPC system based on message queues in disastrOS to allow (blocking) communication between processes;  
@@ -13,5 +13,4 @@
 * Scrivi messaggio: prende il descrittore della coda aperta e ci scrive sopra. Se la coda è piena si blocca. Il processo che tenta di scrivere in una coda piena viene messo a dormire. 
 * Leggi messaggio: prende il descrittore della coda aperta e legge un messaggio. Se la coda è vuota si blocca. Il processo che tenta di leggere da una coda vuota viene messo a dormire. 
 
-Il processo che manda il messaggio rimarrà bloccato (a dormire) fino a quando non riceverà un ACK che gli comunica che un altro processo in ascolto sulla queue ha letto il messaggio.
 

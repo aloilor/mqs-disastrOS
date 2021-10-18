@@ -50,8 +50,9 @@ Resource* ResourceList_byId(ResourceList* l, int id) {
 }
 
 void Resource_print(Resource* r) {
-  printf("id: %d, type:%d, pids:", r->id, r->type);
+  printf("id: %d, type:%d, pids: ", r->id, r->type);
   DescriptorPtrList_print(&r->descriptors_ptrs);
+  printf("\n");
 }
 
 void ResourceList_print(ListHead* l){
