@@ -37,7 +37,6 @@ void MessageQueue_init(){
 }
 
 MessageQueue* MessageQueue_alloc(int id, int type){
-    MessageQueue_init();
     MessageQueue* mq = (MessageQueue*) PoolAllocator_getBlock(&_messagequeues_allocator);
     if (!mq) return 0;
     mq->res = (Resource) *Resource_alloc(id, type);

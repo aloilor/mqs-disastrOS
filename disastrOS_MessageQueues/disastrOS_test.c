@@ -22,15 +22,21 @@ void childFunction(void* args){
   printf("I'm gonna try to open (not create) already existent message queues, let's see if it works out\n");
   int type=DSOS_MQ;
   int mode=0;
-  int fd=disastrOS_mq_open(disastrOS_getpid(),type,mode);
-  if (fd < 0)
-    printf("Error in opening the message queue: %d\n", fd);
-  printf("fd=%d\n", fd);
-  printf("PID: %d, terminating\n", disastrOS_getpid());
 
+  int N = 5;
+  for (int i = 0; i < N; i++){
+    printf("Trying to open message queue id %d\n",i);
+    int fd=disastrOS_mq_open(i,type,mode);
+    if (fd < 0)
+      printf("Error in opening message queue (id%d): %d\n",disastrOS_getpid(), fd);
+    else printf("fd=%d\n", fd);
+  }
+
+  printf("PID: %d, terminating\n", disastrOS_getpid());
+  disastrOS_printStatus();
   for (int i=0; i<(disastrOS_getpid()+1); ++i){
     printf("PID: %d, iterate %d\n", disastrOS_getpid(), i);
-    disastrOS_sleep(6);
+    disastrOS_sleep(4);
   }
   disastrOS_exit(disastrOS_getpid()+1);
 }
@@ -88,62 +94,70 @@ void initFunction(void* args) {
   printf("-------------------------------------------------------------------\n");
   // ------- MESSAGE QUEUES PRIMITIVES TESTING -- EVERYTHING WORKS FINE ------- 
   */
-  
+
+  // ------- MESSAGE QUEUES MQ_OPEN TESTING -- EVERYTHING WORKS FINE ------- 
   int fd;
-  printf("Testing mq_open:\n");
-  fd = disastrOS_mq_open(0, DSOS_MQ, DSOS_CREATE);
-  if (fd < 0)
-    printf("Error in creating message queue: %d\n", fd);
-  disastrOS_printStatus();
-
-  printf("Testing mq_open: trying to create an already existent message queue\n");
+  printf("Testing mq_open: creating message queue with 0 as id\n");
   fd = disastrOS_mq_open(0, DSOS_MQ, DSOS_CREATE);
   if (fd < 0)
     printf("Error in creating message queue: %d\n", fd);
   disastrOS_printStatus();
   printf("-------------------------------------------------------------------\n");
 
-  printf("Testing mq_open: trying to create an already existent message queue\n");
+  printf("Testing mq_open: trying to create an already existent message queue with 0 as id\n");
   fd = disastrOS_mq_open(0, DSOS_MQ, DSOS_CREATE);
   if (fd < 0)
     printf("Error in creating message queue: %d\n", fd);
   disastrOS_printStatus();
   printf("-------------------------------------------------------------------\n");
 
-  printf("Testing mq_open: trying to open (not create) a non existent message queue\n");
+  printf("Testing mq_open: trying to create an already existent message queue with 0 as id \n");
+  fd = disastrOS_mq_open(0, DSOS_MQ, DSOS_CREATE);
+  if (fd < 0)
+    printf("Error in creating message queue: %d\n", fd);
+  disastrOS_printStatus();
+  printf("-------------------------------------------------------------------\n");
+
+  printf("Testing mq_open: trying to open (not create) a non existent message queue with 1 as id\n");
   fd = disastrOS_mq_open(1, DSOS_MQ, 0);
   if (fd < 0)
     printf("Error in creating message queue: %d\n", fd);
   disastrOS_printStatus();
+  printf("-------------------------------------------------------------------\n");
 
-
-  /*printf("Testing mq_open: trying to create an already existent message queue\n");
+  printf("Testing mq_open: trying to create another message queue with 1 as id\n");
   fd = disastrOS_mq_open(1, DSOS_MQ, DSOS_CREATE);
   if (fd < 0)
     printf("Error in creating message queue: %d\n", fd);
   disastrOS_printStatus();
-  printf("-------------------------------------------------------------------\n");*/
+  printf("-------------------------------------------------------------------\n");
 
-  /*
+  printf("******************************************************************\n");
   printf("Testing creation of multiple message queues by the same process (thread in our case)\n");
+  printf("We should get an error trying to create message queues number 0 and number 1, since they have already been created\n");
+  printf("We will create N message queues and spawn N threads which are going to open (not create) message queues\n");
+  printf("******************************************************************\n");
+  int N = 3;
   int alive_children=0;
-  for (int i=0; i<3; i++) {
+  for (int i=0; i<N; i++) {
     int type=DSOS_MQ;
     int mode=DSOS_CREATE;
-    //printf("mode: %d\n", mode);
-    printf("Creating message queue (and launching an error if the message queue already exists)\n");
+    printf("Creating message queue id:%d (and launching an error if the message queue already exists)\n", i);
     int fd=disastrOS_mq_open(i,type,mode);
-
     if (fd < 0)
       printf("Error in creating message queue: %d\n", fd);
-    printf("fd=%d\n", fd);
-    //printf("Thread #%d is gonna spawn \n", last_pid);
-    //disastrOS_spawn(childFunction, 0);
-    //alive_children++;
+    else printf("fd=%d\n", fd);
   }
-  disastrOS_printStatus(); 
 
-  // let's wait for our children to finish their job
+  for(int i = 0; i < N; i++){
+    printf("Thread #%d is gonna spawn \n", last_pid);
+    disastrOS_spawn(childFunction, 0);
+    alive_children++;
+  }
+
+  disastrOS_printStatus(); 
+  
+  printf("let's wait for our children to finish their job\n");
   int retval;
   int pid;
   while(alive_children>0 && (pid=disastrOS_wait(0, &retval))>=0){ 
@@ -153,8 +167,8 @@ void initFunction(void* args) {
     --alive_children;
   } 
   disastrOS_printStatus();
-  */
-
+  // ------- MESSAGE QUEUES MQ_OPEN TESTING -- EVERYTHING WORKS FINE ------- 
+  
   printf("shutdown!");
   disastrOS_shutdown();
 }
