@@ -2,8 +2,7 @@
 
 > Message Queues in disastrOS ---> [x1] [C98]  
 > implement an IPC system based on message queues in disastrOS to allow (blocking) communication between processes;  
-> the starting point is the version of disastrOS presented in class -  
-> available [here](https://gitlab.com/grisetti/sistemi_operativi_2019_20/-/tree/master/source/08_disastrOS/disastrOS_04_resources).
+> the starting point is the version of disastrOS presented in class - available [here](https://gitlab.com/grisetti/sistemi_operativi_2019_20/-/tree/master/source/08_disastrOS/disastrOS_04_resources).
  
 ## Fundamental system calls to implement:  
 * mq_open: creates or open the queue and returns a file descriptor to it.  

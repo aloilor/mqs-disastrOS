@@ -183,6 +183,9 @@ void disastrOS_start(void (*f)(void*), void* f_args, char* logfile){
   syscall_vector[DSOS_MQ_OPEN]      = internal_mqOpen;
   syscall_numarg[DSOS_MQ_OPEN]      = 3;
 
+  syscall_vector[DSOS_MQ_CLOSE]      = internal_mqClose;
+  syscall_numarg[DSOS_MQ_CLOSE]      = 1;
+
   // setup the scheduling lists
   running=0;
   List_init(&ready_list);
@@ -298,8 +301,9 @@ int disastrOS_mq_open(int resource_id, int type, int mode){
   return disastrOS_syscall(DSOS_MQ_OPEN, resource_id, type, mode);
 }
 
-
-
+int disastrOS_mq_close(int fd){
+  return disastrOS_syscall(DSOS_MQ_CLOSE, fd);
+}
 
 
 void disastrOS_printStatus(){

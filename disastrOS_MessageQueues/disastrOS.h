@@ -41,3 +41,4 @@ void disastrOS_printStatus();
 
 // message queues
 int disastrOS_mq_open(int resource_id, int type, int mode);
+int disastrOS_mq_close(int fd);

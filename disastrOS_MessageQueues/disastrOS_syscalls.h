@@ -27,3 +27,5 @@ void internal_destroyResource();
 
 void internal_mqOpen();
 
+void internal_mqClose();
+
