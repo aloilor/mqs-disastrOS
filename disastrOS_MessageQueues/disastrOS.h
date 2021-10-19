@@ -38,3 +38,6 @@ int disastrOS_destroyResource(int resource_id);
 
 // debug function, prints the state of the internal system
 void disastrOS_printStatus();
+
+// message queues
+int disastrOS_mq_open(int resource_id, int type, int mode);

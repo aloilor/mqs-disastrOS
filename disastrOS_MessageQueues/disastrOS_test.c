@@ -5,6 +5,7 @@
 #include "disastrOS.h"
 #include "disastrOS_message_queue.h"
 #include "linked_list.h"
+#include "disastrOS_globals.h"
 
 // we need this to handle the sleep state
 void sleeperFunction(void* args){
@@ -18,9 +19,12 @@ void sleeperFunction(void* args){
 void childFunction(void* args){
   printf("Hello, I am the child function %d\n",disastrOS_getpid());
   printf("I will iterate a bit, before terminating\n");
-  int type=0;
+  printf("I'm gonna try to open (not create) already existent message queues, let's see if it works out\n");
+  int type=DSOS_MQ;
   int mode=0;
-  int fd=disastrOS_openResource(disastrOS_getpid(),type,mode);
+  int fd=disastrOS_mq_open(disastrOS_getpid(),type,mode);
+  if (fd < 0)
+    printf("Error in opening the message queue: %d\n", fd);
   printf("fd=%d\n", fd);
   printf("PID: %d, terminating\n", disastrOS_getpid());
 
@@ -31,48 +35,19 @@ void childFunction(void* args){
   disastrOS_exit(disastrOS_getpid()+1);
 }
 
-
 void initFunction(void* args) {
   disastrOS_printStatus();
   printf("hello, I am init and I just started\n");
   disastrOS_spawn(sleeperFunction, 0);
   
   /*
-  printf("I feel like to spawn 3 nice threads\n");
-  int alive_children=0;
-  for (int i=0; i<3; ++i) {
-    int type=0;
-    int mode=DSOS_CREATE;
-    printf("mode: %d\n", mode);
-    printf("opening resource (and creating if necessary)\n");
-    int fd=disastrOS_openResource(i,type,mode);
-    printf("fd=%d\n", fd);
-    disastrOS_spawn(childFunction, 0);
-    alive_children++;
-  }
-  disastrOS_printStatus(); 
-
-
-  disastrOS_printStatus();
-  int retval;
-  int pid;
-  while(alive_children>0 && (pid=disastrOS_wait(0, &retval))>=0){ 
-    disastrOS_printStatus();
-    printf("initFunction, child: %d terminated, retval:%d, alive: %d \n",
-	   pid, retval, alive_children);
-    --alive_children;
-  } 
-  disastrOS_printStatus();
-  */
-
-
-  
+  // ------- MESSAGE QUEUES PRIMITIVES TESTING -- EVERYTHING WORKS FINE -------
   printf("Testing message queues primitives: \n");
   printf("-------------------------------------------------------------------\n");
 
   printf("Testing init and alloc: \n");
   MessageQueue_init();
-  MessageQueue* mq = MessageQueue_alloc(1, 1);
+  MessageQueue* mq = MessageQueue_alloc(1, DSOS_MQ);
   MessageQueue_print(mq);
   printf("-------------------------------------------------------------------\n");
 
@@ -89,6 +64,18 @@ void initFunction(void* args) {
   MessageQueue_print(mq);
   printf("-------------------------------------------------------------------\n");
 
+  printf("Trying again to write smth in the queue: \n");
+  msg = Message_alloc("I'm fine wbu");
+  List_insert((ListHead*) &mq->messages, (ListItem*)mq->messages.head.first, (ListItem*)msg);
+  MessageQueue_print(mq);
+  printf("-------------------------------------------------------------------\n");
+
+  printf("Trying again to write smth in the queue: \n");
+  msg = Message_alloc("Everything's good thanks mate");
+  List_insert((ListHead*) &mq->messages, (ListItem*)mq->messages.head.first, (ListItem*)msg);
+  MessageQueue_print(mq);
+  printf("-------------------------------------------------------------------\n");
+
   printf("Trying to remove smth from the queue\n");
   List_detach((ListHead*) &mq->messages, (ListItem*)mq->messages.head.last);
   MessageQueue_print(mq);
@@ -98,7 +85,76 @@ void initFunction(void* args) {
   MessageQueue_free(mq);  
   MessageQueue_print(mq);
   printf("-------------------------------------------------------------------\n");
+  printf("-------------------------------------------------------------------\n");
+  // ------- MESSAGE QUEUES PRIMITIVES TESTING -- EVERYTHING WORKS FINE ------- 
+  */
   
+  int fd;
+  printf("Testing mq_open:\n");
+  fd = disastrOS_mq_open(0, DSOS_MQ, DSOS_CREATE);
+  if (fd < 0)
+    printf("Error in creating message queue: %d\n", fd);
+  disastrOS_printStatus();
+
+  printf("Testing mq_open: trying to create an already existent message queue\n");
+  fd = disastrOS_mq_open(0, DSOS_MQ, DSOS_CREATE);
+  if (fd < 0)
+    printf("Error in creating message queue: %d\n", fd);
+  disastrOS_printStatus();
+  printf("-------------------------------------------------------------------\n");
+
+  printf("Testing mq_open: trying to create an already existent message queue\n");
+  fd = disastrOS_mq_open(0, DSOS_MQ, DSOS_CREATE);
+  if (fd < 0)
+    printf("Error in creating message queue: %d\n", fd);
+  disastrOS_printStatus();
+  printf("-------------------------------------------------------------------\n");
+
+  printf("Testing mq_open: trying to open (not create) a non existent message queue\n");
+  fd = disastrOS_mq_open(1, DSOS_MQ, 0);
+  if (fd < 0)
+    printf("Error in creating message queue: %d\n", fd);
+  disastrOS_printStatus();
+
+
+  /*printf("Testing mq_open: trying to create an already existent message queue\n");
+  fd = disastrOS_mq_open(1, DSOS_MQ, DSOS_CREATE);
+  if (fd < 0)
+    printf("Error in creating message queue: %d\n", fd);
+  disastrOS_printStatus();
+  printf("-------------------------------------------------------------------\n");*/
+
+  /*
+  printf("Testing creation of multiple message queues by the same process (thread in our case)\n");
+  int alive_children=0;
+  for (int i=0; i<3; i++) {
+    int type=DSOS_MQ;
+    int mode=DSOS_CREATE;
+    //printf("mode: %d\n", mode);
+    printf("Creating message queue (and launching an error if the message queue already exists)\n");
+    int fd=disastrOS_mq_open(i,type,mode);
+
+    if (fd < 0)
+      printf("Error in creating message queue: %d\n", fd);
+    printf("fd=%d\n", fd);
+    //printf("Thread #%d is gonna spawn \n", last_pid);
+    //disastrOS_spawn(childFunction, 0);
+    //alive_children++;
+  }
+  disastrOS_printStatus(); 
+
+  // let's wait for our children to finish their job
+  int retval;
+  int pid;
+  while(alive_children>0 && (pid=disastrOS_wait(0, &retval))>=0){ 
+    disastrOS_printStatus();
+    printf("initFunction, child: %d terminated, retval:%d, alive: %d \n",
+	   pid, retval, alive_children);
+    --alive_children;
+  } 
+  disastrOS_printStatus();
+  */
+
   printf("shutdown!");
   disastrOS_shutdown();
 }

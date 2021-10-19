@@ -39,12 +39,14 @@
 #define DSOS_CALL_CLOSE_RESOURCE 8
 #define DSOS_CALL_DESTROY_RESOURCE 9
 #define DSOS_CALL_SHUTDOWN  10
+#define DSOS_MQ_OPEN 11
 
 //resources
 #define DSOS_CREATE 0x1
 #define DSOS_READ 0x2
 #define DSOS_WRITE 0x3
 #define DSOS_EXCL 0x4
+#define DSOS_MQ 1 // message queue type
 
 // scheduling
 #define ALPHA 0.5f
