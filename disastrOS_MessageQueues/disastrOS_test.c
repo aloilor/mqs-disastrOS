@@ -198,13 +198,31 @@ void initFunction(void* args) {
 	   pid, retval, alive_children);
     --alive_children;
   } 
-
   disastrOS_printStatus();
+
+  for (int i = 0; i < 6; i++){
+    printf("Trying to unlink message queue with id %d before closing its file descriptor from the main process \n",i);
+    int ret=disastrOS_mq_unlink(i);
+    if (ret == 0)
+      printf("Succesfully closed id %d\n", i);
+    else if (ret < 0) printf("Error in closing fd %d: %d\n", i,ret); 
+  }
+  disastrOS_printStatus();
+
   for (int i = 0; i < N; i++){
     printf("Trying to close message queue with fd id %d\n",i);
     int ret=disastrOS_mq_close(i);
     if (ret == 0)
       printf("Succesfully closed fd %d\n", i);
+    else if (ret < 0) printf("Error in closing fd %d: %d\n", i,ret); 
+  }
+  disastrOS_printStatus();
+
+  for (int i = 0; i < 6; i++){
+    printf("Trying to unlink message queue with id %d\n",i);
+    int ret=disastrOS_mq_unlink(i);
+    if (ret == 0)
+      printf("Succesfully closed id %d\n", i);
     else if (ret < 0) printf("Error in closing fd %d: %d\n", i,ret); 
   }
   disastrOS_printStatus();

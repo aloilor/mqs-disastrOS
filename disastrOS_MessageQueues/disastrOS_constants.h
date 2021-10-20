@@ -42,6 +42,8 @@
 // message queue syscalls
 #define DSOS_MQ_OPEN 11
 #define DSOS_MQ_CLOSE 12
+#define DSOS_MQ_UNLINK 13
+
 
 //resources
 #define DSOS_CREATE 0x1

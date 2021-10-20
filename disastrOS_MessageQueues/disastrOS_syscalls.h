@@ -29,3 +29,5 @@ void internal_mqOpen();
 
 void internal_mqClose();
 
+void internal_mqUnlink();
+
