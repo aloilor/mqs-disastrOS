@@ -27,6 +27,6 @@ void internal_mqUnlink(){
 
     mq=(MessageQueue*) List_detach(&resources_list, (ListItem*) mq);
     assert(mq);
-    int ret = MessageQueue_free(mq);
+    MessageQueue_free(mq);
     running->syscall_retvalue=0;
 }

@@ -26,6 +26,8 @@ Message* Message_alloc(char* text);
 
 int MessageQueue_free(MessageQueue* mq);
 
+int Message_free(Message* msg);
+
 typedef ListHead MessageQueueList;
 
 void MessageQueue_print(MessageQueue* mq);

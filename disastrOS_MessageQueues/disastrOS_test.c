@@ -109,7 +109,7 @@ void initFunction(void* args) {
 
   // ------- MESSAGE QUEUES SYSCALLS BASIC TESTING -- EVERYTHING WORKS FINE ------- 
   // ------- MESSAGE QUEUES SYSCALLS BASIC TESTING -- EVERYTHING WORKS FINE ------- 
-  int fd; int ret;
+  int fd; int ret; char* msg_read;
   printf("Testing mq_open: creating message queue with 0 as id\n");
   fd = disastrOS_mq_open(0, DSOS_MQ, DSOS_CREATE);
   if (fd < 0)
@@ -138,12 +138,43 @@ void initFunction(void* args) {
   disastrOS_printStatus();
   printf("-------------------------------------------------------------------\n");
 
+  printf("Testing mq_receive: trying to receive a message from the message queue with 0 as fd\n");
+  ret = disastrOS_mq_receive(fd, msg_read);
+  if (ret < 0)
+    printf("Error in receiving message: %d\n", fd);
+  else {
+    msg_read = (char*) running->syscall_args[1];
+    printf("I received this message: %s\n", msg_read);
+  }
+  disastrOS_printStatus();
+  printf("-------------------------------------------------------------------\n");
+
+  printf("Testing mq_receive: trying to receive a message from the message queue with 0 as fd\n");
+  msg_read = 0;
+  ret = disastrOS_mq_receive(fd, msg_read);
+  if (ret < 0)
+    printf("Error in receiving message: %d\n", fd);
+  else{
+    msg_read = (char*) running->syscall_args[1];
+    printf("I received this message: %s\n", msg_read);
+  } 
+  disastrOS_printStatus();
+  printf("-------------------------------------------------------------------\n");
+
   printf("Testing mq_close: closing message queue file descriptor with 0 as id\n");
   ret = disastrOS_mq_close(fd);
   if (ret == 0)
     printf("Succesfully closed message queue file descript %d\n", fd);
   disastrOS_printStatus();
   printf("-------------------------------------------------------------------\n");
+
+  printf("Testing mq_unlink: unlinking message queue with 0 as id\n");
+  ret = disastrOS_mq_unlink(0);
+  if (ret == 0)
+    printf("Succesfully unlinked message queue with id 0\n");
+  disastrOS_printStatus();
+  printf("-------------------------------------------------------------------\n");
+  
 
   /*
   printf("Testing mq_open: trying to create an already existent message queue with 0 as id\n");

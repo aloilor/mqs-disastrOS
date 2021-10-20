@@ -5,10 +5,9 @@
 > the starting point is the version of disastrOS presented in class - available [here](https://gitlab.com/grisetti/sistemi_operativi_2019_20/-/tree/master/source/08_disastrOS/disastrOS_04_resources).
  
 ## Fundamental system calls to implement:  
-* mq_open: creates or open the queue and returns a file descriptor to it.  
-* mq_unlink: destroys the queue.  
-* mq_close: closes the descriptor.  
-* mq_send: given a file descriptor and a message, this call writes that message on the message queue. If the queue is full, the process sleeps itself.    
-* Leggi messaggio: prende il descrittore della coda aperta e legge un messaggio. Se la coda è vuota si blocca. Il processo che tenta di leggere da una coda vuota viene messo a dormire.  
-
+* mq_open: creates or opens the queue and returns a file descriptor to it if successful, <0 if not.  
+* mq_unlink: destroys the queue. returns 0 if successful, <0 if not.  
+* mq_close: closes the descriptor. returns 0 if successful, <0 if not.  
+* mq_send: given a file descriptor and a message, writes the message on the message queue. if the queue is full, the process sleeps itself. returns 0 if successful, <0 if not.  
+* mq_receive: given a file descriptor and a buffer, writes the message on the buffer. if the queue is empty, the running process sleeps itself. returns 0 if successful, <0 if not.
 

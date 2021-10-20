@@ -37,6 +37,7 @@ OBJS=pool_allocator.o\
      disastrOS_mq_close.o\
      disastrOS_mq_unlink.o\
      disastrOS_mq_send.o\
+     disastrOS_mq_receive.o\
 
 LIBS=libdisastrOS.a
 

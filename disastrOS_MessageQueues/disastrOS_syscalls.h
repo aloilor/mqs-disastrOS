@@ -33,3 +33,4 @@ void internal_mqUnlink();
 
 void internal_mqSend();
 
+void internal_mqReceive();

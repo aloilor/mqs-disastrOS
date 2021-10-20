@@ -17,7 +17,7 @@ void internal_schedule() {
   TimerItem* elapsed_timer=0;
   PCB* previous_pcb=0;
 
-  //printf("SCHEDULE\n");
+  printf("SCHEDULE\n");
   while( (elapsed_timer=TimerList_current(&timer_list, disastrOS_time)) ){
     PCB* pcb_to_wake=elapsed_timer->pcb;
     List_detach(&waiting_list, (ListItem*) pcb_to_wake);

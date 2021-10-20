@@ -64,6 +64,10 @@ int MessageQueue_free(MessageQueue* mq){
     return PoolAllocator_releaseBlock(&_messagequeues_allocator, mq);
 }
 
+int Message_free(Message* msg){
+    return PoolAllocator_releaseBlock(&_messages_allocator, msg);
+}
+
 void MessageQueue_print(MessageQueue* mq) {
     Resource_print(&mq->res);
     printf("\t");
