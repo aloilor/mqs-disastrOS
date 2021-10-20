@@ -43,3 +43,4 @@ void disastrOS_printStatus();
 int disastrOS_mq_open(int resource_id, int type, int mode);
 int disastrOS_mq_close(int fd);
 int disastrOS_mq_unlink(int id);
+int disastrOS_mq_send(int fd, char* msg);

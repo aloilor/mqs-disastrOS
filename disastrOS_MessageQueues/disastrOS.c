@@ -189,6 +189,10 @@ void disastrOS_start(void (*f)(void*), void* f_args, char* logfile){
   syscall_vector[DSOS_MQ_UNLINK]      = internal_mqUnlink;
   syscall_numarg[DSOS_MQ_UNLINK]      = 1;
 
+  syscall_vector[DSOS_MQ_SEND]      = internal_mqSend;
+  syscall_numarg[DSOS_MQ_SEND]      = 2;
+
+
   // setup the scheduling lists
   running=0;
   List_init(&ready_list);
@@ -310,6 +314,10 @@ int disastrOS_mq_close(int fd){
 
 int disastrOS_mq_unlink(int id){
   return disastrOS_syscall(DSOS_MQ_UNLINK, id);
+}
+
+int disastrOS_mq_send(int fd, char* msg){
+  return disastrOS_syscall(DSOS_MQ_SEND, fd, msg);
 }
 
 

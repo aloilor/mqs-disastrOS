@@ -4,6 +4,8 @@
 #include "disastrOS_descriptor.h"
 #include "pool_allocator.h"
 #include "linked_list.h"
+#include "disastrOS_message_queue.h"
+
 
 #define RESOURCE_SIZE sizeof(Resource)
 #define RESOURCE_MEMSIZE (sizeof(Resource)+sizeof(int))
@@ -61,7 +63,12 @@ void ResourceList_print(ListHead* l){
   while(aux){
     Resource* r=(Resource*)aux;
     printf("\t");
-    Resource_print(r);
+
+    if (r->type == DSOS_MQ){
+      MessageQueue* mq = (MessageQueue*) r;
+      MessageQueue_print(mq);
+    }
+    if (r->type != DSOS_MQ) Resource_print(r);
     if(aux->next)
       printf(",");
     printf("\n");

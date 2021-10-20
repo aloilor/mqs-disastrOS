@@ -8,7 +8,7 @@
 * mq_open: creates or open the queue and returns a file descriptor to it.  
 * mq_unlink: destroys the queue.  
 * mq_close: closes the descriptor.  
-* Scrivi messaggio: prende il descrittore della coda aperta e ci scrive sopra. Se la coda è piena si blocca. Il processo che tenta di scrivere in una coda piena viene messo a dormire.  
+* mq_send: given a file descriptor and a message, this call writes that message on the message queue. If the queue is full, the process sleeps itself.    
 * Leggi messaggio: prende il descrittore della coda aperta e legge un messaggio. Se la coda è vuota si blocca. Il processo che tenta di leggere da una coda vuota viene messo a dormire.  
 
 

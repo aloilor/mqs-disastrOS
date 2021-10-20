@@ -66,7 +66,8 @@ int MessageQueue_free(MessageQueue* mq){
 
 void MessageQueue_print(MessageQueue* mq) {
     Resource_print(&mq->res);
-    printf("I'm going to print every message in the MessageQueue from the first to the last:\n");
+    printf("\t");
+    //printf("I'm going to print every message in the MessageQueue from the first to the last:\n");
     Message* aux = (Message*) mq->messages.head.first;
     printf("[");
     while (aux){
@@ -80,9 +81,6 @@ MessageQueue* MessageQueueList_byId(MessageQueueList* l, int id) {
     return (MessageQueue*)ResourceList_byId((ResourceList*) l, id);
 }
 
-void MessageQueueList_print(MessagesHead* mh){
-        
-}
 
 
 

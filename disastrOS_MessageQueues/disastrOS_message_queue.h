@@ -31,5 +31,3 @@ typedef ListHead MessageQueueList;
 void MessageQueue_print(MessageQueue* mq);
 
 MessageQueue* MessageQueueList_byId(MessageQueueList* l, int id);
-
-void MessageQueueList_print(MessagesHead* mh);

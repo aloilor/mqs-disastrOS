@@ -5,6 +5,9 @@
 #define MAX_NUM_RESOURCES_PER_PROCESS 32
 #define MAX_NUM_DESCRIPTORS_PER_PROCESS 32
 
+#define MQ_MAX_MSG_SIZE 2
+
+
 #define STACK_SIZE        16384
 // signals
 #define MAX_SIGNALS 32
@@ -25,6 +28,7 @@
 #define DSOS_ERESOURCENOFD -11
 #define DSOS_ERESOURCECLOSE -12
 #define DSOS_ERESOURCEINUSE -13
+#define DSOSO_ERESOURCESEND -14
 
 // syscall numbers
 #define DSOS_MAX_SYSCALLS 32
@@ -39,10 +43,13 @@
 #define DSOS_CALL_CLOSE_RESOURCE 8
 #define DSOS_CALL_DESTROY_RESOURCE 9
 #define DSOS_CALL_SHUTDOWN  10
+
 // message queue syscalls
 #define DSOS_MQ_OPEN 11
 #define DSOS_MQ_CLOSE 12
 #define DSOS_MQ_UNLINK 13
+#define DSOS_MQ_SEND 14
+#define DSOS_MQ_RECV 15
 
 
 //resources

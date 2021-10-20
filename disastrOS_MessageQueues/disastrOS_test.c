@@ -117,6 +117,27 @@ void initFunction(void* args) {
   disastrOS_printStatus();
   printf("-------------------------------------------------------------------\n");
 
+  printf("Testing mq_send: trying to send a message to the message queue with 0 as fd\n");
+  ret = disastrOS_mq_send(fd, "Hello");
+  if (ret < 0)
+    printf("Error in sending message: %d\n", fd);
+  disastrOS_printStatus();
+  printf("-------------------------------------------------------------------\n");
+
+  printf("Testing mq_send: trying to send a message to the message queue with 0 as fd\n");
+  ret = disastrOS_mq_send(fd, "How are you");
+  if (ret < 0)
+    printf("Error in sending message: %d\n", fd);
+  disastrOS_printStatus();
+  printf("-------------------------------------------------------------------\n");
+
+  printf("Testing mq_send: trying to send a message to the message queue with 0 as fd\n");
+  ret = disastrOS_mq_send(fd, "How are you");
+  if (ret < 0)
+    printf("Error in sending message: %d\n", fd);
+  disastrOS_printStatus();
+  printf("-------------------------------------------------------------------\n");
+
   printf("Testing mq_close: closing message queue file descriptor with 0 as id\n");
   ret = disastrOS_mq_close(fd);
   if (ret == 0)
@@ -124,6 +145,7 @@ void initFunction(void* args) {
   disastrOS_printStatus();
   printf("-------------------------------------------------------------------\n");
 
+  /*
   printf("Testing mq_open: trying to create an already existent message queue with 0 as id\n");
   fd = disastrOS_mq_open(0, DSOS_MQ, DSOS_CREATE);
   if (fd < 0)
@@ -144,6 +166,7 @@ void initFunction(void* args) {
     printf("Error in creating message queue: %d\n", fd);
   disastrOS_printStatus();
   printf("-------------------------------------------------------------------\n");
+  */
 
   printf("Testing mq_open: trying to create another message queue with 1 as id\n");
   fd = disastrOS_mq_open(1, DSOS_MQ, DSOS_CREATE);
@@ -161,7 +184,7 @@ void initFunction(void* args) {
   // ------- MESSAGE QUEUES SYSCALLS BASIC TESTING -- EVERYTHING WORKS FINE ------- 
   // ------- MESSAGE QUEUES SYSCALLS BASIC TESTING -- EVERYTHING WORKS FINE ------- 
 
-
+  /*
   // ------- MESSAGE QUEUES SYSCALLS MORE ADVANCED TESTING -- EVERYTHING WORKS FINE ------- 
   // ------- MESSAGE QUEUES SYSCALLS MORE ADVANCED TESTING -- EVERYTHING WORKS FINE ------- 
   printf("******************************************************************\n");
@@ -228,6 +251,7 @@ void initFunction(void* args) {
   disastrOS_printStatus();
   // ------- MESSAGE QUEUES SYSCALLS MORE ADVANCED TESTING -- EVERYTHING WORKS FINE ------- 
   // ------- MESSAGE QUEUES SYSCALLS MORE ADVANCED TESTING -- EVERYTHING WORKS FINE ------- 
+  */
 
 
   printf("shutdown!\n");

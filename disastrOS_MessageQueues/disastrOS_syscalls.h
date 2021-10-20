@@ -31,3 +31,5 @@ void internal_mqClose();
 
 void internal_mqUnlink();
 
+void internal_mqSend();
+
