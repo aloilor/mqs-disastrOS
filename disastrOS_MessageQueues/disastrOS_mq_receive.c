@@ -9,7 +9,7 @@
 
 // to receive a message through the message queue
 void internal_mqReceive(){
-    int SLEEP = 150;
+    int SLEEP = 40;
 
     // retrieve the fd of the message queue to receive the message from
     int fd=running->syscall_args[0];
@@ -26,14 +26,14 @@ void internal_mqReceive(){
     MessageQueue* mq = (MessageQueue*) des->resource;
 
     // check if empty: if empty sleep the running process for SLEEP milliseconds, to mimic the blocking aspect of the mailbox
-    if (mq->num_msg == 0){
+    while (mq->num_msg == 0){
         printf("The queue is empty, let's go to sleep for a while and preempt to another process:)\n");
         disastrOS_sleep(SLEEP);
     }
 
     Message* msg_read = (Message*) List_detach((ListHead*)&mq->messages.head, (ListItem*) mq->messages.head.first);
     assert(msg_read);
-    printf("This is the message I've read and that I just removed from the queue: %s\n", msg_read->msg);
+    //printf("This is the message I've read and that I just removed from the queue: %s\n", msg_read->msg);
     
     // let's free the memory from the pool allocator for
     Message_free(msg_read);

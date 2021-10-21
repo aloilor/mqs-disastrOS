@@ -9,7 +9,7 @@
 
 // to send a message through the message queue
 void internal_mqSend(){
-    int SLEEP = 150;
+    int SLEEP = 40;
 
     // retrieve the fd of the message queue to send the message to
     int fd=running->syscall_args[0];
@@ -38,7 +38,7 @@ void internal_mqSend(){
     // otherwise, just continue and add the message to the queue
     List_insert((ListHead*)&mq->messages, mq->messages.head.last, (ListItem*) to_insert);
     mq->num_msg++;    
-    printf("This message queue received [%s] message \n", to_insert->msg);
+    // printf("This message queue received [%s] message \n", to_insert->msg);
     
     //on success return 0
     running->syscall_retvalue=0;
