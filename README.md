@@ -8,6 +8,6 @@
 * mq_open: creates or opens the queue and returns a file descriptor to it if successful, <0 if not.  
 * mq_unlink: destroys the queue. returns 0 if successful, <0 if not.  
 * mq_close: closes the descriptor. returns 0 if successful, <0 if not.  
-* mq_send: given a file descriptor and a message, writes the message on the message queue. if the queue is full, the process sleeps itself. returns 0 if successful, <0 if not.  
-* mq_receive: given a file descriptor and a buffer, writes the message on the buffer. if the queue is empty, the running process sleeps itself. returns 0 if successful, <0 if not.
+* mq_send: given a file descriptor and a message, writes the message on the message queue. if the queue is full, the process puts itself to sleep. returns 0 if successful, <0 if not.  
+* mq_receive: given a file descriptor and a buffer, writes the message on the buffer. if the queue is empty, the running process puts itself to sleep. returns 0 if successful, <0 if not.
 

@@ -71,14 +71,16 @@ int Message_free(Message* msg){
 void MessageQueue_print(MessageQueue* mq) {
     Resource_print(&mq->res);
     printf("\t");
-    //printf("I'm going to print every message in the MessageQueue from the first to the last:\n");
+    printf("[messages in the mailbox]:\n");
+    printf("\t");
     Message* aux = (Message*) mq->messages.head.first;
     printf("[");
     while (aux){
-        printf("- %s - ", aux->msg);
+        printf("-%s- ", aux->msg);
         aux = (Message*) aux->list.next;
     }
     printf("]\n");
+    return;
 }
 
 MessageQueue* MessageQueueList_byId(MessageQueueList* l, int id) {
