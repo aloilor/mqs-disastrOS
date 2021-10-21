@@ -94,8 +94,10 @@ int disastrOS_syscall(int syscall_num, ...) {
     running->syscall_args[i] = va_arg(ap,long int);
   }
   va_end(ap);
+
   running->syscall_num=syscall_num;
   swapcontext(&running->cpu_state, &trap_context);
+
   return running->syscall_retvalue;
 }
 

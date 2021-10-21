@@ -9,7 +9,7 @@
 
 // to send a message through the message queue
 void internal_mqSend(){
-    int SLEEP = 40;
+    //int SLEEP = 50;
 
     // retrieve the fd of the message queue to send the message to
     int fd=running->syscall_args[0];
@@ -26,10 +26,20 @@ void internal_mqSend(){
     // retrieve the message queue
     MessageQueue* mq = (MessageQueue*) des->resource;
 
-    // check if full: if full, put the running process to sleep for SLEEP milliseconds (to mimic the blocking aspect of the queue) 
+    // check if full: if full, put the running process to sleep for SLEEP milliseconds (to mimic the blocking aspect of the queue)
+    // Segmentation fault (core dumped) or *** stack smashing detected ***: <unknown> terminated
+    /* 
     while (mq->num_msg == MQ_MAX_MSG_SIZE) {
         printf("The queue is full, let's go to sleep for a while and preempt to another process :) \n");
         disastrOS_sleep(SLEEP);
+        disastrOS_printStatus();
+    }
+    */
+    // workaround
+    if (mq->num_msg == MQ_MAX_MSG_SIZE){
+        printf("The queue is full, let's go to sleep and let another process do its job :)\n");
+        running->syscall_retvalue=DSOS_MQ_FULL;
+        return;
     }
 
     // let's create our message

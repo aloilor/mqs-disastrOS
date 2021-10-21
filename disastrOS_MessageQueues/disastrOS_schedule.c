@@ -17,7 +17,6 @@ void internal_schedule() {
   TimerItem* elapsed_timer=0;
   PCB* previous_pcb=0;
 
-  printf("SCHEDULE\n");
   while( (elapsed_timer=TimerList_current(&timer_list, disastrOS_time)) ){
     PCB* pcb_to_wake=elapsed_timer->pcb;
     List_detach(&waiting_list, (ListItem*) pcb_to_wake);
@@ -35,9 +34,8 @@ void internal_schedule() {
     next_process->status=Running;
     running=next_process;
   }
-  //disastrOS_printStatus();
- 
   if (running) {
     disastrOS_debug(" %d\n", running->pid);
   }
+  //disastrOS_printStatus();
 }
