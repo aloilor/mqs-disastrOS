@@ -11,3 +11,8 @@
 * mq_send: given a file descriptor and a message, writes the message on the message queue. if the queue is full, the process puts itself to sleep. returns 0 if successful, <0 if not.  
 * mq_receive: given a file descriptor and a buffer, writes the message on the buffer. if the queue is empty, the running process puts itself to sleep. returns 0 if successful, <0 if not.
 
+## How to run:
+- cd disastrOS_MessageQueues/
+- make
+- ./disastrOS_test
+
