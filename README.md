@@ -14,5 +14,5 @@
 ## How to run:
 - cd disastrOS_MessageQueues/
 - make
-- ./disastrOS_test
-
+- ./disastrOS_test (for a stress test of the queue syscalls)
+- ./disastrOS_test_blocking (for a test of the blocking aspect of the queue)
