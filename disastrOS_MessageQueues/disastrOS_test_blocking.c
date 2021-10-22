@@ -42,14 +42,9 @@ void childFunctionRecv(void* args){
   char* msg_read = 0;
   for(i = 0; i < M; i++){
     ret = disastrOS_mq_receive(fd, msg_read);
-    if (ret < 0){
+    if (ret < 0)
       printf("[Child%d]: Error in receiving message: %d\n", disastrOS_getpid(), ret);
-      if (ret == DSOS_MQ_EMPTY){
-        printf("[Child%d]: Empty queue: let's sleep for a bit, so that another process can fill the queue :)\n", disastrOS_getpid());
-        disastrOS_sleep(SLEEP);
-      } 
-    }else 
-      printf("[Child%d]: this is the message I received and I removed from the queue: %s\n", disastrOS_getpid(),(char*) running->syscall_args[1]);
+    // else printf("[Child%d]: this is the message I received and I removed from the queue: %s\n", disastrOS_getpid(),(char*) running->syscall_args[1]);
   } disastrOS_printStatus(); printf("******************************************************************\n\n");
 
   printf("[Child%d]: Closing file descriptor %d for the queue.\n", disastrOS_getpid(), fd);
@@ -111,17 +106,13 @@ void initFunction(void* args) {
   alive_children++;
   disastrOS_printStatus(); printf("******************************************************************\n\n");
 
-  printf("[Main process]: I'm now gonna populate message queue id %d with %d messages (by sending them through the message queue) (if possibile ;) .\n", 0, M);
+  printf("[Main process]: I'm now gonna populate message queue id %d with %d messages (by sending them through the message queue) (if possibile ;) ).\n", 0, M);
   for (i = 0; i < M; i++){
     ret = disastrOS_mq_send(fd, buf[0][i]);
     if (ret < 0){
       printf("[Main process]: Error in sending message: %d.\n", ret);
-      if (ret == DSOS_MQ_FULL){
-        printf("[Main process]: Full queue: let's sleep for a bit so that another process can empty the queue :)\n");
-        disastrOS_sleep(SLEEP);
-      }
     }
-    else printf("[Main process]: this is the message that I just sent through the queue: %s\n", buf[0][i]);
+    //else printf("[Main process]: this is the message that I just sent through the queue: %s\n", buf[0][i]);
   }disastrOS_printStatus(); 
   printf("******************************************************************\n\n");
 

@@ -9,7 +9,7 @@
 
 // to receive a message through the message queue
 void internal_mqReceive(){
-    //int SLEEP = 50;
+    int SLEEP = 30;
 
     // retrieve the fd of the message queue to receive the message from
     int fd=running->syscall_args[0];
@@ -25,8 +25,6 @@ void internal_mqReceive(){
     // retrieve the message queue
     MessageQueue* mq = (MessageQueue*) des->resource;
 
-    // check if empty: while empty, continue to sleep the running process for SLEEP milliseconds, to mimic the blocking aspect of the mailbox
-
     // Segmentation fault (core dumped) or *** stack smashing detected ***: <unknown> terminated
     /*
     while(mq->num_msg == 0){
@@ -35,17 +33,43 @@ void internal_mqReceive(){
     }
     */
 
-    // workaround 
+    // check if empty: if empty, put the running process to sleep for SLEEP milliseconds, to mimic the blocking aspect of the mailbox
     if (mq->num_msg == 0){
-        printf("The queue is empty, let's go to sleep and let another process do its job :)\n");
+        printf("[PID%d]: The queue is empty, let's go to sleep and let another process do its job :)\n", disastrOS_getpid());
+        
+        if (running->timer) {
+            printf("process has already a timer!!!\n");
+            running->syscall_retvalue=DSOS_ESLEEP;
+            return;
+        }
+        int cycles_to_sleep=SLEEP;
+        int wake_time=disastrOS_time+cycles_to_sleep;
+  
+        TimerItem* new_timer=TimerList_add(&timer_list, wake_time, running);
+        if (! new_timer) {
+            printf("no new timer!!!\n");
+            running->syscall_retvalue=DSOS_ESLEEP;
+            return;
+        } 
+        
+        // let's preempt manually
+        running->status = Waiting;
+        List_insert(&waiting_list, waiting_list.last, (ListItem*) running);
+        if (ready_list.first)
+            running=(PCB*) List_detach(&ready_list, ready_list.first);
+        else {
+            running=0;
+            printf ("they are all sleeping\n");
+            disastrOS_printStatus();
+        }
         running->syscall_retvalue=DSOS_MQ_EMPTY;
         return;
     }
-    
 
     Message* msg_read = (Message*) List_detach((ListHead*)&mq->messages.head, (ListItem*) mq->messages.head.first);
     assert(msg_read);
-    //printf("This is the message I've read and that I just removed from the queue: %s\n", msg_read->msg);
+
+    printf("[PID%d]: This is the message I've received and that I just removed from the queue: %s\n",disastrOS_getpid(), msg_read->msg);
     
     mq->num_msg--;
 
